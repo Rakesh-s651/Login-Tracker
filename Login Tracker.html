@@ -45,6 +45,26 @@
         <button id="break-end">End Break</button>
     </div>
 
+    <div class="container hidden" id="admin-container">
+        <h2>Admin Page</h2>
+        <button id="export-csv">Export to CSV</button>
+        <table id="user-table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>User Name</th>
+                    <th>Email ID</th>
+                    <th>Password</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- User details will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
