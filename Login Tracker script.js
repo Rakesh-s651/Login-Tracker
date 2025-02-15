@@ -1,12 +1,15 @@
 const registerContainer = document.getElementById('register-container');
 const loginContainer = document.getElementById('login-container');
 const welcomeContainer = document.getElementById('welcome-container');
+const adminContainer = document.getElementById('admin-container');
 const registerForm = document.getElementById('register-form');
 const loginForm = document.getElementById('login-form');
 const welcomeMessage = document.getElementById('welcome-message');
 const signOutButton = document.getElementById('sign-out');
 const breakStartButton = document.getElementById('break-start');
 const breakEndButton = document.getElementById('break-end');
+const exportCsvButton = document.getElementById('export-csv');
+const userTableBody = document.getElementById('user-table').querySelector('tbody');
 
 let users = [];
 let currentUser = null;
@@ -23,6 +26,7 @@ registerForm.addEventListener('submit', (e) => {
     alert('Registration successful!');
     registerContainer.classList.add('hidden');
     loginContainer.classList.remove('hidden');
+    saveUsersToExcel();
 });
 
 loginForm.addEventListener('submit', (e) => {
@@ -65,8 +69,41 @@ breakEndButton.addEventListener('click', () => {
     }
 });
 
+exportCsvButton.addEventListener('click', () => {
+    exportUsersToCsv();
+});
+
 function logUserActivity(activity) {
     const dateTime = new Date().toLocaleString();
     console.log(`${currentUser.userName} ${activity} at ${dateTime}`);
     // Here you would store the activity in an Excel file or database
+}
+
+function saveUsersToExcel() {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(users);
+    XLSX.utils.book_append_sheet(wb, ws, 'Users');
+    XLSX.writeFile(wb, 'user_access_list.xlsx');
+}
+
+function exportUsersToCsv() {
+    const ws = XLSX.utils.json_to_sheet(users);
+    const csv = XLSX.utils.sheet_to_csv(ws);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, 'user_access_list.csv');
+    populateUserTable();
+}
+
+function populateUserTable() {
+    userTableBody.innerHTML = '';
+    users.forEach(user => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${user.userId}</td>
+            <td>${user.userName}</td>
+            <td>${user.email}</td>
+            <td>${user.password}</td>
+        `;
+        userTableBody.appendChild(row);
+    });
 }
